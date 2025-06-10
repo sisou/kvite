@@ -1,5 +1,5 @@
 name = "kvite"
-version = "1.0.0"
+version = "1.1.0"
 
 description = "A simple KV store in SQLite"
 licences = ["Apache-2.0"]
