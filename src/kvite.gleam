@@ -135,7 +135,18 @@ pub fn del(kv: Kvite, key key: String) -> Result(Nil, KviteError) {
 
 /// Get a list of all keys in the database. Returns an empty list if there are no keys.
 pub fn keys(kv: Kvite) -> Result(List(String), KviteError) {
-  raw.keys(kv.conn, kv.table)
+  raw.keys(kv.conn, kv.table, None)
+  |> result.map_error(to_kvite_error)
+}
+
+/// Get a list of all keys prefixed by `prefix` in the database.
+/// The list is alphabetically ordered.
+/// Returns an empty list if there are no keys with the given prefix.
+pub fn keys_prefix(
+  kv: Kvite,
+  prefix prefix: String,
+) -> Result(List(String), KviteError) {
+  raw.keys(kv.conn, kv.table, Some(prefix))
   |> result.map_error(to_kvite_error)
 }
 

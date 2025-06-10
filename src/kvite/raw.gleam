@@ -93,9 +93,15 @@ pub fn del(
 pub fn keys(
   connection conn: sqlight.Connection,
   table_name table: String,
+  prefix prefix: Option(String),
 ) -> Result(List(String), sqlight.Error) {
-  { "SELECT key FROM " <> table <> ";" }
-  |> sqlight.query(conn, [], {
+  let #(like, args) = case prefix {
+    None -> #("", [])
+    Some(prefix) -> #(" WHERE key LIKE ?", [sqlight.text(prefix <> "%")])
+  }
+
+  { "SELECT key FROM " <> table <> like <> " ORDER BY key;" }
+  |> sqlight.query(conn, args, {
     use key <- decode.field(0, decode.string)
     decode.success(key)
   })
